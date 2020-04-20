@@ -7,7 +7,7 @@ npm install
 tsc build
 .\website\index.html
 ```
-## Useage
+## Usage
 * Open the webpage up on your phone/tablet/touchscreen for silent marking while recording
 * Start your video recording and the VideoTimer at the same time
 * At the end of each statement, mark it with an icon that represents what happens in the previous time space [eg. ✔ -> "good take", ✂ -> "cut this out"]
