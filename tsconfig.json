@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "pretty": true,
+        "lib": ["DOM", "ES2020"],
+        "module": "AMD",
+        "target": "es5",
+        "rootDir": "src",
+        "outDir": "dist",
+        "outFile": "website/js/VideoTimer.Entry.js",
+
+        "sourceMap": true,
+        "noEmitOnError": true,
+
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictPropertyInitialization": true,
+
+        "alwaysStrict": true,
+        "preserveConstEnums": true,
+        "newLine": "lf",
+
+        "types": [],
+    },
+}
