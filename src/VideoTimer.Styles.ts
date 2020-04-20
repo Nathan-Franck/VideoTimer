@@ -29,6 +29,8 @@ export namespace VideoTimerStyles {
         cursor: "pointer",
         userSelect: "none",
 
+        fontSize: 32,
+
         backgroundColor: "grey",
         borderStyle: "solid",
         borderColor: "white",
