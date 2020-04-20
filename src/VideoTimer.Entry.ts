@@ -132,6 +132,24 @@ export namespace VideoTimerEntry {
                     style: Styles.button,
                     attributes: {
                         innerHTML: `${icon}`,
+                        onclick: () => {
+                            model.mutate({
+                                markers: [
+                                    ...model.state.markers,
+                                    {
+                                        note: icon,
+                                        readableTime: getReadableDuration(model.state),
+                                    },
+                                ],
+                            });
+                            if (model.state.startTime == null ||
+                                model.state.endTime != null) {
+                                model.mutate({
+                                    startTime: Date.now(),
+                                    endTime: undefined,
+                                });
+                            }
+                        },
                     },
                 })
             );
@@ -140,21 +158,29 @@ export namespace VideoTimerEntry {
                 startRecording.innerHTML = state.startTime == null || state.endTime != null ? "⏯" : "🛑";
             });
 
-            model.listen(["endTime"], state => {
+            model.respond(["endTime"], state => {
                 if (state.endTime == null) {
                     return;
                 }
                 const durationReadable = getReadableDuration(state);
+                const markerOutput = state.markers.reduce((result, marker) =>
+                    `${result}\n${marker.readableTime} - ${marker.note}`, "");
 
-                console.log(`Total Time: ${durationReadable} [h:m:s]
-Raw markers: ${ state.markers.reduce((result, marker) => `${result}, ${marker}`, "")}`);
+                console.log(`Total Time: ${durationReadable} [h:m:s]\nRaw markers: ${markerOutput}`);
 
-                console.log(`📝 Require output file in the future 🚀`);
+                const json = JSON.stringify(state);
+                const blob = new Blob([json], {type: "application/json"});
+                const url  = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+
+                return {
+                    markers: []
+                };
             });
 
             const updateTimer = () => {
                 const ms = Date.now();
-                const blinkState = model.state.endTime == null ? false : Math.round(ms / 500) % 2 == 0;
+                const blinkState = model.state.endTime == null ? false : Math.floor(ms / 500) % 2 == 0;
                 timer.innerHTML = blinkState ? "🤚" : getReadableDuration(model.state);
                 requestAnimationFrame(updateTimer);
             };
@@ -206,17 +232,20 @@ Raw markers: ${ state.markers.reduce((result, marker) => `${result}, ${marker}`,
         });
     }
 
-    type State = {
-        startTime: number | undefined,
-        endTime: number | undefined,
-        markers: { time: number, note: string }[]
+    type State = Partial<StartEndTime> & {
+        markers: { readableTime: string, note: string }[]
     };
 
-    function getReadableDuration(state: State) {
+    type StartEndTime = {
+        startTime: number,
+        endTime: number,
+    };
+
+    function getReadableDuration(state: Partial<StartEndTime>) {
         const durationMS = (state.endTime ?? Date.now()) - (state.startTime ?? Date.now());
-        const totalSeconds = Math.round(durationMS / 1000);
-        const totalMinutes = Math.round(totalSeconds / 60);
-        const hours = Math.round(totalMinutes / 60);
+        const totalSeconds = Math.floor(durationMS / 1000);
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const hours = Math.floor(totalMinutes / 60);
         const remainingMinutes = `0${totalMinutes - hours * 60}`.slice(-2);
         const remainingSeconds = `0${totalSeconds - totalMinutes * 60}`.slice(-2);
         const durationReadable = `${hours}:${remainingMinutes}:${remainingSeconds}`;
