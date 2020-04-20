@@ -38,7 +38,7 @@ export namespace VideoTimerEntry {
             type: "div",
             style: {
                 gridArea: "t",
-
+ 
                 ...Styles.centered,
 
                 borderColor: "green",
@@ -169,8 +169,8 @@ export namespace VideoTimerEntry {
                 console.log(`Total Time: ${durationReadable} [h:m:s]\nRaw markers: ${markerOutput}`);
 
                 const json = JSON.stringify(state);
-                const blob = new Blob([json], {type: "application/json"});
-                const url  = URL.createObjectURL(blob);
+                const blob = new Blob([json], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
                 window.open(url, '_blank');
 
                 return {
@@ -242,7 +242,10 @@ export namespace VideoTimerEntry {
     };
 
     function getReadableDuration(state: Partial<StartEndTime>) {
-        const durationMS = (state.endTime ?? Date.now()) - (state.startTime ?? Date.now());
+        const durationMS =
+            state.endTime == null || state.startTime == null ?
+                0 :
+                state.endTime - state.startTime;
         const totalSeconds = Math.floor(durationMS / 1000);
         const totalMinutes = Math.floor(totalSeconds / 60);
         const hours = Math.floor(totalMinutes / 60);
