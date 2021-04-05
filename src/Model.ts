@@ -55,7 +55,7 @@ export class Model<T> {
         });
     }
 
-    public mutate(partialState: Partial<T>) {
+    public merge(partialState: Partial<T>) {
         this.state = {
             ...this.state,
             ...partialState,

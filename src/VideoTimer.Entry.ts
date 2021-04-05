@@ -3,9 +3,6 @@ import { VideoTimerStyles as Styles } from './VideoTimer.Styles';
 import { Model } from './Model';
 
 export namespace VideoTimerEntry {
-    interface StringConstructor {
-        format: (formatString: string, ...replacement: any[]) => string;
-    }
     export function initializeClient() {
         const head = HtmlBuilder.assignToElement(document.head, {
             attributes: {
@@ -22,7 +19,7 @@ export namespace VideoTimerEntry {
                 fontSize: 20,
             },
         });
-        const outline = HtmlBuilder.createChild(body, {
+        const outline = HtmlBuilder.create_child(body, {
             type: "div",
             style: {
                 ...Styles.outline,
@@ -34,11 +31,11 @@ export namespace VideoTimerEntry {
                 `,
             },
         });
-        const header = HtmlBuilder.createChild(outline, {
+        const header = HtmlBuilder.create_child(outline, {
             type: "div",
             style: {
                 gridArea: "t",
- 
+
                 ...Styles.centered,
 
                 borderColor: "green",
@@ -47,7 +44,7 @@ export namespace VideoTimerEntry {
                 padding: "0.5em",
             },
         });
-        HtmlBuilder.createChild(header, {
+        HtmlBuilder.create_child(header, {
             type: "div",
             style: {
                 ...Styles.text,
@@ -57,7 +54,7 @@ export namespace VideoTimerEntry {
             },
         });
 
-        const appSpace = HtmlBuilder.createChild(outline, {
+        const appSpace = HtmlBuilder.create_child(outline, {
             type: "div",
             style: {
                 gridArea: "a",
@@ -79,7 +76,7 @@ export namespace VideoTimerEntry {
                 markers: [],
             });
 
-            const startRecording = HtmlBuilder.createChild(appSpace, {
+            const startRecording = HtmlBuilder.create_child(appSpace, {
                 type: "div",
                 style: {
                     gridArea: "p",
@@ -90,11 +87,11 @@ export namespace VideoTimerEntry {
                     onclick: () => {
                         if (model.state.startTime != null &&
                             model.state.endTime == null) {
-                            model.mutate({
+                            model.merge({
                                 endTime: Date.now(),
                             });
                         } else {
-                            model.mutate({
+                            model.merge({
                                 startTime: Date.now(),
                                 endTime: undefined,
                             });
@@ -103,7 +100,7 @@ export namespace VideoTimerEntry {
                 },
             });
 
-            const timer = HtmlBuilder.createChild(appSpace, {
+            const timer = HtmlBuilder.create_child(appSpace, {
                 type: "div",
                 style: {
                     gridArea: "t",
@@ -115,7 +112,7 @@ export namespace VideoTimerEntry {
                 },
             });
 
-            const buttonGrid = HtmlBuilder.createChild(appSpace, {
+            const buttonGrid = HtmlBuilder.create_child(appSpace, {
                 type: "div",
                 style: {
                     ...Styles.centered,
@@ -127,13 +124,13 @@ export namespace VideoTimerEntry {
             });
 
             const markers = ["✨", "✂", "❌", "✔", "❓"].map(icon =>
-                HtmlBuilder.createChild(buttonGrid, {
+                HtmlBuilder.create_child(buttonGrid, {
                     type: "div",
                     style: Styles.button,
                     attributes: {
                         innerHTML: `${icon}`,
                         onclick: () => {
-                            model.mutate({
+                            model.merge({
                                 markers: [
                                     ...model.state.markers,
                                     {
@@ -144,7 +141,7 @@ export namespace VideoTimerEntry {
                             });
                             if (model.state.startTime == null ||
                                 model.state.endTime != null) {
-                                model.mutate({
+                                model.merge({
                                     startTime: Date.now(),
                                     endTime: undefined,
                                 });
@@ -187,13 +184,12 @@ export namespace VideoTimerEntry {
             requestAnimationFrame(updateTimer);
         }
 
-        const footer = HtmlBuilder.createChild(outline, {
+        const footer = HtmlBuilder.create_child(outline, {
             type: "div",
             style: {
                 gridArea: "f",
                 display: "grid",
                 ...Styles.centered,
-                //gridTemplateColumns: "2fr 1fr 2fr",
                 gridGap: "1em",
                 margin: "0.5em",
                 gridTemplateAreas: `
@@ -202,7 +198,7 @@ export namespace VideoTimerEntry {
             },
         });
 
-        const warning = HtmlBuilder.createChild(footer, {
+        const warning = HtmlBuilder.create_child(footer, {
             type: "div",
             style: {
                 gridArea: "w",
@@ -217,7 +213,7 @@ export namespace VideoTimerEntry {
             },
         });
 
-        const socials = HtmlBuilder.createChild(footer, {
+        const socials = HtmlBuilder.create_child(footer, {
             type: "div",
             style: {
                 gridArea: "s",
@@ -227,7 +223,7 @@ export namespace VideoTimerEntry {
                 justifySelf: "right",
             },
             attributes: {
-                innerHTML: "😸github.com/TacticalDan 🕊@tactical_dan",
+                innerHTML: "😸github.com/TacticalDan<br>🕊@tactical_dan",
             },
         });
     }
@@ -242,10 +238,8 @@ export namespace VideoTimerEntry {
     };
 
     function getReadableDuration(state: Partial<StartEndTime>) {
-        const durationMS =
-            state.endTime == null || state.startTime == null ?
-                0 :
-                state.endTime - state.startTime;
+        const currentMS = Date.now();
+        const durationMS = (state.endTime ?? currentMS) - (state.startTime ?? currentMS);
         const totalSeconds = Math.floor(durationMS / 1000);
         const totalMinutes = Math.floor(totalSeconds / 60);
         const hours = Math.floor(totalMinutes / 60);

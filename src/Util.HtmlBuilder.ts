@@ -108,7 +108,7 @@ export namespace HtmlBuilder {
      * ✨Create a HTMLElement and add it to the parent element.
      * Assigns mentioned members to this element after creating.
      */
-    export function createChild<T extends keyof HTMLElementTagNameMap>(
+    export function create_child<T extends keyof HTMLElementTagNameMap>(
         parent: HTMLElement,
         tag: HTMLTag<T>,
     ) {
@@ -148,7 +148,7 @@ export namespace HtmlBuilder {
             parent.appendChild(existingElement);
             return existingElement;
         } else {
-            const child = createChild(parent, tag);
+            const child = create_child(parent, tag);
             if (onChildCreated != null)
                 onChildCreated(child);
             return child;
