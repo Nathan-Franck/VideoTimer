@@ -7,7 +7,7 @@ Markup your video timeline with icons while you record footage to make editing e
 ```
 npm install
 tsc build
-.\website\index.html
+.\index.html
 ```
 ## Usage
 * Open the webpage up on your phone/tablet/touchscreen for silent marking while recording
