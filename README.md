@@ -1,6 +1,8 @@
 # VideoTimer
 Markup your video timeline with icons while you record footage to make editing easier later.
 
+![VideoTimer Showcase](https://raw.githubusercontent.com/TacticalDan/VideoTimer/master/VideoTimer%20Showcase.png)
+
 ## Installation
 ```
 npm install
